@@ -3,7 +3,7 @@ use rand::Rng;
 use std::{thread, time};
 
 const BOARD_X: i32 = 64;
-const BOARD_Y: i32 = 16;
+const BOARD_Y: i32 = 20;
 
 #[derive(PartialEq, Copy, Clone)]
 enum CellState {
