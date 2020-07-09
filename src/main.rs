@@ -1,8 +1,9 @@
 use std::fmt;
 use rand::Rng;
+use std::{thread, time};
 
-const BOARD_X: i32 = 10;
-const BOARD_Y: i32 = 10;
+const BOARD_X: i32 = 64;
+const BOARD_Y: i32 = 16;
 
 #[derive(PartialEq, Copy, Clone)]
 enum CellState {
@@ -22,6 +23,7 @@ struct Board {
 impl fmt::Display for Board {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> std::result::Result<(), fmt::Error> {
         Ok(for row in self.state.iter() {
+            write!(f, "| ")?;
             for cell in row.iter() {
                 let cell_char = match cell {
                     CellState::Dead  => '.',
@@ -29,7 +31,7 @@ impl fmt::Display for Board {
                 };
                 write!(f, "{}", cell_char)?;
             }
-            writeln!(f, "")?;
+            writeln!(f, " |")?;
         })
     }
 }
@@ -126,11 +128,18 @@ fn insert_pattern(board: &mut Board, pattern: Pattern, offset: (i32, i32)) {
 fn main() {
     let mut board = Board::new();
     
-    insert_pattern(&mut board, Pattern::Glider, (7, 7));
+    insert_pattern(&mut board, Pattern::Glider, (0, 0));
+    insert_pattern(&mut board, Pattern::Glider, (16, 0));
+    insert_pattern(&mut board, Pattern::Glider, (32, 0));
+    insert_pattern(&mut board, Pattern::Glider, (48, 0));
 
-    for _ in 0..20 {
+    let sleep_time = time::Duration::from_millis(50);
+    let mut iteration_num = 0;
+    loop {
+        println!(".__________________________ Iteration {} __________________________.", iteration_num);
         println!("{}", board);
         board = get_next_board(&board);
+        thread::sleep(sleep_time);
+        iteration_num += 1;
     }
-    println!("{}", board);
 }
